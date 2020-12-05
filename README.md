@@ -60,7 +60,7 @@ After the training process has concluded, use `inference.py` to produce predicti
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_predictions.csv --npz_fp data/val.npz
 ```
 
-This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximize accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set with the `--cust_thresh [THRESHOLD]` flag as in the following example.
+This process will produce a self-explanatory `val_predictions.csv.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) which maximizes accuracy will be calculated from the results. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set with the `--cust_thresh [THRESHOLD]` flag as in the following example.
 
 ```
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/test_predictions.csv --npz_fp data/test.npz --cust_thresh [THRESHOLD]
