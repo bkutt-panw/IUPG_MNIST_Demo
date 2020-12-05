@@ -38,9 +38,20 @@ if __name__ == "__main__":
         "--npz_fp",
         required=True,
         help=("The NPZ file containing the data."))
+    parser.add_argument(
+        "--gpu_id",
+        required=False,
+        default=None,
+        help=("Specificy a GPU to use by its ID (default: None)."),
+    )
     args = parser.parse_args()
     if not os.path.isdir(os.path.dirname(args.save_fp)):
         os.makedirs(os.path.dirname(args.save_fp))
+
+    if args.gpu_id is None:
+        os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    if args.gpu_id is not None:
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id)
 
     print(("-" * 80))
     print("Loading model...")
