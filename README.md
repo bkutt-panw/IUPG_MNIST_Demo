@@ -38,7 +38,7 @@ Use `train_IUPG.py` to train a model. This script takes in a configuration file.
 python3 train_IUPG.py --config_files train_without_noise
 ```
 
-The above call will train an IUPG model and save everything to the directory specified in `save_dir` in the config file. With this example config file, all models and results are saved to `cnn_results/no_noise/`. To train on GPU 0 on your machine, add the following flag as such.
+The above call will train an IUPG model and save everything to the directory specified in `save_dir` in the config file. With this example config file, all models and results are saved to `cnn_results/no_noise/`. To train on a GPU on your machine, add the `--gpu_id [id]` flag. For example, to train on GPU 0, do the following.
 
 ```
 python3 train_IUPG.py --config_files train_without_noise --gpu_id 0
