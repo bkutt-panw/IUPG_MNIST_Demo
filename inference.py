@@ -25,7 +25,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--cust_thresh",
         required=False,
-        default=None,
+        default=-1.0,
+        type=float,
         help=("Pass in a threshold to call noise. Otherwise, compute the "
               "optimal threshold."),
     )
@@ -34,10 +35,9 @@ if __name__ == "__main__":
         required=True,
         help=("The filepath you want to save all results in."),
     )
-    parser.add_argument(
-        "--npz_fp",
-        required=True,
-        help=("The NPZ file containing the data."))
+    parser.add_argument("--npz_fp",
+                        required=True,
+                        help=("The NPZ file containing the data."))
     parser.add_argument(
         "--gpu_id",
         required=False,
@@ -67,17 +67,16 @@ if __name__ == "__main__":
     all_min_D = np.min(all_sig_D, axis=1)
     all_win_protos = np.argmin(all_sig_D, axis=1) + 1
 
-    if args.cust_thresh is None:
+    if args.cust_thresh < 0:
         # Get optimal threshold
         print('--> Getting optimal threshold...')
-        opt_threshold = utils.get_opt_threshold(data["y"], all_min_D,
-                                                all_win_protos)
-        print(('----> Optimal threshold computed: %f' % opt_threshold))
-        all_y_pred = np.copy(all_win_protos)
-        thresh = opt_threshold
+        thresh = utils.get_opt_threshold(data["y"], all_min_D, all_win_protos)
+        print(('----> Optimal threshold computed: %f' % thresh))
     else:
+        print(('--> Using custom threshold: %f' % args.cust_thresh))
         thresh = args.cust_thresh
     # Call relevant samples noise
+    all_y_pred = np.copy(all_win_protos)
     all_y_pred[all_min_D >= thresh] = 0
 
     print("Writing prediction CSV...")
@@ -86,7 +85,7 @@ if __name__ == "__main__":
         all_sig_D,
         all_y_pred,
         args.save_fp,
-        y_true=data["y"],
+        all_y_true=data["y"],
     )
     print(("--> Wrote predictions to: %s" % args.save_fp))
     print("\nExiting...")

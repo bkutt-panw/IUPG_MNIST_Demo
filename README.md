@@ -74,13 +74,13 @@ python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_
 
 ## Analyzing results
 
-The script `analyze_scores.py` will enable you to analyze the true positive rate at specified maximum false-positive rates. This is called the False-Positive Sensitive Recall (FPSRC). An example call is shown below.
+The script `analyze_scores.py` will enable you to analyze the non-noise error (one minus the accuracy over all non-noise classes) at specified maximum false-positive rates. In this case, a false-positive is defined as a noise sample being classified as any non-noise class. Accordinly, this will be uninformative if your test set does not contain noise. An example call is shown below.
 
 ```
 python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001
 ```
 
-In the above example, we are calculating the FPSRC on both the validation and test set at the 1%, 0.1%, and 0.01% FPR levels.
+In the above example, we are calculating the non-noise error on both the validation and test set at the 1%, 0.1%, and 0.01% FPR levels.
 
 ## License
 

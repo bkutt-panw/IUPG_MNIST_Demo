@@ -8,7 +8,9 @@ Copyright (c) 2020 Palo Alto Networks
 """
 
 import os
+import sys
 import csv
+import utils
 import argparse
 import numpy as np
 from sklearn.metrics import roc_curve
@@ -42,9 +44,8 @@ def read_pred_file(path):
                 elif "Y_PRED" in h or "Y_TRUE" in h:
                     data[h].append(int(v))
             n_rows += 1
-    n_protos = len([i for i in headers if "SCORE" in i])
-    all_sig_D = np.zeros((n_rows, n_protos))
-    for i in range(n_protos):
+    all_sig_D = np.zeros((n_rows, utils.n_protos()))
+    for i in range(utils.n_protos()):
         all_sig_D[:, i] = data["%d_SCORE" % i]
     data["all_sig_D"] = all_sig_D
     data["all_min_D"] = np.min(all_sig_D, axis=1)
@@ -105,7 +106,11 @@ if __name__ == "__main__":
 
     if len(ref_fprs) > 0:
         print("\nComputing ROC curves...")
-        assert np.min(data["y_true_np"]) == 0
+        if np.min(data["y_true_np"]) != 0:
+            print("--> Your data doesn't contain any noise samples.")
+            print("\nExiting...")
+            print(("-" * 80))
+            sys.exit()
         all_fprs, all_threshs = [], []
         for i, data in enumerate(all_data):
             print(("\n\tUsing predictions with label '%s':" % labels[i]))

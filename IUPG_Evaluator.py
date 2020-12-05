@@ -40,14 +40,14 @@ class IUPG_Evaluator(object):
                                  os.path.basename(self.iupg_path) + ".meta")
         graph = tf.Graph()
         with graph.as_default():
-            session_conf = tf.ConfigProto(
+            session_conf = tf.compat.v1.ConfigProto(
                 allow_soft_placement=True,
                 log_device_placement=LOG_DEVICE_PLACEMENT,
             )
-            self.sess = tf.Session(config=session_conf)
+            self.sess = tf.compat.v1.Session(config=session_conf)
             with self.sess.as_default():
                 # Load the saved meta graph and restore variables
-                saver = tf.train.import_meta_graph(meta_path)
+                saver = tf.compat.v1.train.import_meta_graph(meta_path)
                 saver.restore(self.sess, model_dir)
                 # Get the input placeholders from the graph by name
                 self.X_batch = graph.get_operation_by_name(

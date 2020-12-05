@@ -116,7 +116,7 @@ def record_scores_and_preds(dig_ids,
     """
     Take in results and save them to disk in a CSV file.
     """
-    with open(save_fp, "wb") as csv_file:
+    with open(save_fp, "w") as csv_file:
         writer = csv.writer(csv_file)
         # Create header row
         header_row = ["DIGIT_ID"]
@@ -131,7 +131,7 @@ def record_scores_and_preds(dig_ids,
             new_row = [dig_ids[i]]
             sig_D = all_sig_D[i, :]
             new_row += [float(j) for j in sig_D]
-            new_row = [all_y_pred[i]]
+            new_row += [all_y_pred[i]]
             if all_y_true is not None:
                 new_row += [all_y_true[i]]
             writer.writerow(new_row)
