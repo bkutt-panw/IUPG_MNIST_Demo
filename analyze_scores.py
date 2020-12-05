@@ -70,6 +70,14 @@ if __name__ == "__main__":
               "file. Separate each with a comma."),
     )
     parser.add_argument(
+        "--cust_thresh",
+        required=False,
+        default=-1.0,
+        type=float,
+        help=("Pass in a threshold to call noise. Otherwise, use the results "
+              "already present in Y_PRED."),
+    )
+    parser.add_argument(
         "--ref_fprs",
         default="",
         required=False,
@@ -96,7 +104,14 @@ if __name__ == "__main__":
     all_accuracy = []
     for i, data in enumerate(all_data):
         print(("\tUsing predictions with label '%s':" % labels[i]))
-        acc = accuracy_score(data["y_true_np"], data["y_pred_np"])
+        if args.cust_thresh < 0:
+            print('--> Using results in Y_PRED')
+            acc = accuracy_score(data["y_true_np"], data["y_pred_np"])
+        else:
+            print(('--> Using custom threshold: %f' % args.cust_thresh))
+            y_pred = np.argmin(data["all_sig_D"], axis=1) + 1
+            y_pred[data["all_min_D"] >= args.cust_thresh] = 0
+            acc = accuracy_score(data["y_true_np"], y_pred)
         print(("\t\tAccuracy: %f" % acc))
         all_accuracy.append(acc)
 

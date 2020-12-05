@@ -60,7 +60,7 @@ After the training process has concluded, use `inference.py` to produce predicti
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_predictions.csv --npz_fp data/val.npz
 ```
 
-This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximize accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set such as in the following example.
+This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximize accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set with the `--cust_thresh [THRESHOLD]` flag as in the following example.
 
 ```
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/test_predictions.csv --npz_fp data/test.npz --cust_thresh [THRESHOLD]
@@ -74,13 +74,18 @@ python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_
 
 ## Analyzing results
 
-The script `analyze_scores.py` will enable you to analyze the non-noise error (one minus the accuracy over all non-noise classes) at specified maximum false-positive rates. In this case, a false-positive is defined as a noise sample being classified as any non-noise class. Accordinly, this will be uninformative if your test set does not contain noise. An example call is shown below.
+The script `analyze_scores.py` will enable you to analyze performance using the output of `inference.py`. You can compute the overall accuracy as well as the non-noise error (one minus the accuracy over all non-noise classes) at specified maximum false-positive rates. In this case, a false-positive is defined as a noise sample being classified as any non-noise class. Accordingly, the latter will be uninformative if your test set does not contain noise. An example call is shown below.
 
 ```
 python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001
 ```
 
-In the above example, we are calculating the non-noise error on both the validation and test set at the 1%, 0.1%, and 0.01% FPR levels.
+In the above example, we are calculating the non-noise error on both the validation and test set at the 1%, 0.1%, and 0.01% FPR levels. This will display the accuracy at the threshold which was pre-applied from `inference.py`. To compute the accuracy at a custom threshold, use the `--cust_thresh` flag like so.
+
+```
+python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001 --cust_thresh [THRESHOLD]
+```
+
 
 ## License
 
