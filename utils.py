@@ -113,7 +113,9 @@ def record_scores_and_preds(dig_ids,
                             all_y_pred,
                             save_fp,
                             all_y_true=None):
-    """"""
+    """
+    Take in results and save them to disk in a CSV file.
+    """
     with open(save_fp, "wb") as csv_file:
         writer = csv.writer(csv_file)
         # Create header row
@@ -136,7 +138,10 @@ def record_scores_and_preds(dig_ids,
 
 
 def get_opt_threshold(y_true, min_D, win_protos):
-    """"""
+    """
+    Calculate the decision  threshold (to call noise samples) which maximizes
+    accuracy.
+    """
     min_D_inds = np.argsort(min_D)
     sorted_y_true = y_true[min_D_inds]
     sorted_min_D = min_D[min_D_inds]

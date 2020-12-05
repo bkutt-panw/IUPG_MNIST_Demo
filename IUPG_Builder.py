@@ -495,7 +495,7 @@ class IUPG_Builder(object):
 
     def network(self, inp, reuse=False):
         """
-        The main network encoder structure.
+        Defines the main network encoder.
         """
         # Send through convolutional layers
         Z_flat = self.conv_layers(inp)
@@ -1455,7 +1455,9 @@ class IUPG_Builder(object):
         self.plot_protos_helper(protos, plot_name)
 
     def plot_protos_helper(self, protos, plot_name):
-        """"""
+        """
+        Plot the passed in prototypes.
+        """
         fig = plt.figure(figsize=(4.0, 10.0))
         grid = ImageGrid(fig, 111, nrows_ncols=(2, 5), axes_pad=0.0)
         for ax, proto in zip(grid, protos):
@@ -1632,7 +1634,10 @@ class IUPG_Builder(object):
         plt.close()
 
     def get_proto_labels(self):
-        """"""
+        """
+        Get labels for all prototypes. If int2label is not defined, the classes
+        will have generic labels.
+        """
         if self.int2label is None:
             proto_labels = ["Noise"] + [("Proto %d" % (i + 1))
                                         for i in range(utils.n_protos())]
@@ -1643,7 +1648,10 @@ class IUPG_Builder(object):
         return proto_labels
 
     def plot_best_pps(self):
-        """"""
+        """
+        Plot the current state of the best_pps variable which holds the per
+        proto stats at the snapshot of training with optimal loss.
+        """
         # Define labels
         proto_labels = self.get_proto_labels()
         # Create dataframes
@@ -1666,7 +1674,10 @@ class IUPG_Builder(object):
             utils.pretty_plot_2darr(df, save_fp, arr_type="pps_%s" % stat)
 
     def plot_best_cm(self):
-        """"""
+        """
+        Plot the current state of the best_cm variable which holds the
+        confusion matrix at the snapshot of training with optimal loss.
+        """
         # Define labels
         proto_labels = self.get_proto_labels()
         # Create dataframe

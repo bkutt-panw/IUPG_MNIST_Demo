@@ -41,7 +41,9 @@ def create_gauss_noise_images(n_train,
                               n_val,
                               n_test,
                               scales=np.arange(0.7, 2.2, 0.1)):
-    """"""
+    """
+    Construct Gaussian noise samples.
+    """
     print("--> Constructing training Gaussian noise images...")
     train_rnd_sample = None
     for scale in scales:
@@ -130,7 +132,9 @@ def create_gauss_noise_images(n_train,
 
 
 def create_stroke_noise_images(n_train, n_val, n_test, rf):
-    """"""
+    """
+    Construct random stroke images.
+    """
     # Possible strokes to choose from
     possible_strokes = [
         "line",
@@ -143,7 +147,9 @@ def create_stroke_noise_images(n_train, n_val, n_test, rf):
     ]
 
     def draw_random_stroke(d, stroke_type_override=None):
-        """"""
+        """
+        Draw a single stroke onto d.
+        """
         stroke_details = {}
         if stroke_type_override is None:
             stroke_type = possible_strokes[randint(0, 6)]
@@ -187,7 +193,9 @@ def create_stroke_noise_images(n_train, n_val, n_test, rf):
         return stroke_details
 
     def generate_stroke_image():
-        """"""
+        """
+        Generate a single new random stroke image.
+        """
         no_valid_image_yet = True
         while no_valid_image_yet:
             # Draw random strokes
@@ -298,7 +306,7 @@ if __name__ == "__main__":
         random_state=utils.random_seed(),
     )
 
-    # Add one to labels to account for noise class
+    # Add one to labels to account for the noise class
     y_train += 1
     y_val += 1
     y_test += 1
@@ -461,6 +469,5 @@ if __name__ == "__main__":
         int2label=int2label,
     )
     print(("--> Saved test-stroke.npz"))
-
     print("\nExiting...")
     print(("-" * 80))

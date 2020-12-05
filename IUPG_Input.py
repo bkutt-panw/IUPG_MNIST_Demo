@@ -13,7 +13,6 @@ import numpy as np
 
 
 class IUPG_Input:
-    """"""
     def __init__(self,
                  X,
                  y=None,
@@ -178,7 +177,10 @@ class IUPG_Input:
         return batch
 
     def get_rnd_train_sample(self, size):
-        """"""
+        """
+        Randomly sample the training set.
+        """
+        assert self.using_val
         rnd_sample = {}
         new_order = random.sample(list(range(self.n_train)), self.n_train)
         new_order = new_order[:size]
@@ -187,9 +189,12 @@ class IUPG_Input:
         return rnd_sample
 
     def get_balanced_rnd_train_sample(self, size):
-        """"""
+        """
+        Randomly sample the training set that is balanced w.r.t. class
+        frequencies.
+        """
+        assert self.using_val
         rnd_sample = self.get_rnd_train_sample(self.n_train)
-
         bal_order = []
         n_noise = 0
         n_digit = [0 for i in range(self.n_classes - 1)]
@@ -210,7 +215,9 @@ class IUPG_Input:
         return bal_rnd_sample
 
     def get_batch_iter(self, sample, batch_size):
-        """"""
+        """
+        Generate an batch iterator for a sample.
+        """
         sample_size = len(sample["y"])
         k = 0  # Keep track of where we are in the loop
         while k < sample_size:

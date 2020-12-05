@@ -16,12 +16,16 @@ from sklearn.metrics import accuracy_score
 
 
 def floatToString(inp):
-    """"""
+    """
+    Print a float nicely.
+    """
     return ("%.15f" % inp).rstrip("0").rstrip(".")
 
 
 def read_pred_file(path):
-    """"""
+    """
+    Read in the output of inference.py and load everything into numpy arrays.
+    """
     data = {}
     with open(path, "r") as csvfile:
         csv_reader = csv.reader(csvfile)

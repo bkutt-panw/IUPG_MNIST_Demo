@@ -100,7 +100,9 @@ class IUPG_Evaluator(object):
         include_y=False,
         U_protos=None,
     ):
-        """"""
+        """
+        Define a dictionary to feed into the TF session.
+        """
         feed_dict = {}
         feed_dict[self.X_batch] = batch["X"]
         feed_dict[self.drop_keep_prob] = 1.0
