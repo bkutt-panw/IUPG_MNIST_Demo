@@ -28,11 +28,11 @@ Run
 python3 get_data.py
 ```
 
-To create and download all the datasets to this project directory. All datasets (stored as compressed Numpy arrays with extension .npz) will be stored inside `data/`. In total, 9 files will be created. The train, validation, and test splits will be saved. Versions of train, val, and test with Gaussian noise and random stroke noise seperately will also be saved. Global variables inside `get_data.py` control this process. Noise samples have class label 0 while digits 0-9 have class labels 1-10.
+To create and download all the datasets to this project directory. All datasets (stored as compressed Numpy arrays with extension .npz) will be stored inside `data/`. In total, 9 files will be created. The train, validation, and test splits will be saved. Versions of train, val, and test with Gaussian noise and random stroke noise separately will also be saved. Global variables inside `get_data.py` control this process. Noise samples have class label 0 while digits 0-9 have class labels 1-10.
 
 ## Training a model
 
-Use `train_IUPG.py` to train a model. This script takes in a configuration file. A template as well as two example config files are provided in `configs/`. An example call is
+Use `train_IUPG.py` to train a model. This script takes in a configuration file. A template, as well as two example config files, are provided in `configs/`. An example call is
 
 ```
 python3 train_IUPG.py --config_files train_without_noise
@@ -44,7 +44,7 @@ The above call will train an IUPG model and save everything to the directory spe
 python3 train_IUPG.py --config_files train_without_noise --gpu_id 0
 ```
 
-The resulting directory contains several self-explanatory CSV files which summarize performance. Additionally,
+The resulting directory contains several self-explanatory CSV files that summarize performance. Additionally,
 
 * `kmeans_plots/` will contain the prototype initializations which were discovered by clustering if that option was chosen.
 * `models/` will contain the snapshot of the optimal model found during training.
@@ -60,7 +60,7 @@ After the training process has concluded, use `inference.py` to produce predicti
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_predictions.csv --npz_fp data/val.npz
 ```
 
-This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximizes accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set such as in the following example.
+This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximize accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set such as in the following example.
 
 ```
 python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/test_predictions.csv --npz_fp data/test.npz --cust_thresh [THRESHOLD]
@@ -74,7 +74,7 @@ The script `analyze_scores.py` will enable you to analyze the true positive rate
 python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001
 ```
 
-In the above example, we are calcuating the FPSRC on both the validation and test set at the 1%, 0.1% and 0.01% FPR levels.
+In the above example, we are calculating the FPSRC on both the validation and test set at the 1%, 0.1%, and 0.01% FPR levels.
 
 ## License
 
