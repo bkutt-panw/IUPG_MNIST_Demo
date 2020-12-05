@@ -1,6 +1,6 @@
 # Project Title
 
-A simple demo implementation of IUPG to train an MNIST classifier with or without noise.
+A simple demo implementation of the Innocent Until Proven Guilty (IUPG) learning framework to train an MNIST classifier with or without noise.
 
 ## Prerequisites
 
@@ -46,11 +46,11 @@ python3 train_IUPG.py --config_files train_without_noise --gpu_id 0
 
 The resulting directory contains several self-explanatory CSV files which summarize performance. Additionally,
 
-* `kmeans_plots` will contain the prototype initializations which were discovered by clustering if that option was chosen.
-* `models` will contain the snapshot of the optimal model found during training.
-* `perf_plots` will contain accompanying plots of the summary files.
-* `proto_plots` will contain snapshot plots of the prototypes with a frequency that is specified in the config file.
-* `tsne_plots` will contain snapshot plots of some training data in the output vector space with a frequency that is specified in the config file. t-SNE is used to visualize this high dimensional space. You may need to edit the t-SNE parameters inside `IUPG_Builder.py` to get this to work well.
+* `kmeans_plots/` will contain the prototype initializations which were discovered by clustering if that option was chosen.
+* `models/` will contain the snapshot of the optimal model found during training.
+* `perf_plots/` will contain accompanying plots of the summary files.
+* `proto_plots/` will contain snapshot plots of the prototypes with a frequency that is specified in the config file.
+* `tsne_plots/` will contain snapshot plots of some training data in the output vector space with a frequency that is specified in the config file. t-SNE is used to visualize this high dimensional space. You may need to edit the t-SNE parameters inside `IUPG_Builder.py` to get this to work well.
 
 ## Running inference
 
