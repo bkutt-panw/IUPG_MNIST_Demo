@@ -34,12 +34,13 @@ if __name__ == "__main__":
         required=True,
         help=("The filepath you want to save all results in."),
     )
-    parser.add_argument("--npz_fp",
-                        required=True,
-                        help=("The NPZ file containing the data."))
+    parser.add_argument(
+        "--npz_fp",
+        required=True,
+        help=("The NPZ file containing the data."))
     args = parser.parse_args()
-    if not os.path.isdir(args.save_dir):
-        os.mkdir(args.save_dir)
+    if not os.path.isdir(os.path.dirname(args.save_fp)):
+        os.makedirs(os.path.dirname(args.save_fp))
 
     print(("-" * 80))
     print("Loading model...")
@@ -57,8 +58,10 @@ if __name__ == "__main__":
 
     if args.cust_thresh is None:
         # Get optimal threshold
+        print('--> Getting optimal threshold...')
         opt_threshold = utils.get_opt_threshold(data["y"], all_min_D,
                                                 all_win_protos)
+        print(('----> Optimal threshold computed: %f' % opt_threshold))
         all_y_pred = np.copy(all_win_protos)
         thresh = opt_threshold
     else:

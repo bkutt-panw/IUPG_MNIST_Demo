@@ -1,4 +1,4 @@
-# Project Title
+# IUPG_MNIST_Demo
 
 A simple demo implementation of the Innocent Until Proven Guilty (IUPG) learning framework to train an MNIST classifier with or without noise.
 
@@ -28,7 +28,7 @@ Run
 python3 get_data.py
 ```
 
-To create and download all the datasets to this project directory. All datasets (stored as compressed Numpy arrays with extension .npz) will be stored inside `data/`. In total, 9 files will be created. The train, validation, and test splits will be saved. Versions of train, val, and test with Gaussian noise and random stroke noise seperately will also be saved. Global variables inside `get_data.py` control this process.
+To create and download all the datasets to this project directory. All datasets (stored as compressed Numpy arrays with extension .npz) will be stored inside `data/`. In total, 9 files will be created. The train, validation, and test splits will be saved. Versions of train, val, and test with Gaussian noise and random stroke noise seperately will also be saved. Global variables inside `get_data.py` control this process. Noise samples have class label 0 while digits 0-9 have class labels 1-10.
 
 ## Training a model
 
@@ -54,10 +54,28 @@ The resulting directory contains several self-explanatory CSV files which summar
 
 ## Running inference
 
+After the training process has concluded, use `inference.py` to produce predictions on new data. An example call is below.
+
+```
+python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/val_predictions.csv --npz_fp data/val.npz
+```
+
+This process will produce a self-explanatory `testset_predictions.csv` file with all of the results. In this case, an optimal threshold (to call noise samples) will be calculated from the results which maximizes accuracy. For proper test set analysis, use the optimal threshold that is calculated on the validation set (it will be printed to the terminal) and then apply it to the test set such as in the following example.
+
+```
+python3 inference.py --model_dir cnn_results/no_noise --save_fp predictions/test_predictions.csv --npz_fp data/test.npz --cust_thresh [THRESHOLD]
+```
 
 ## Analyzing results
 
+The script `analyze_scores.py` will enable you to analyze the true positive rate at specified maximum false-positive rates. This is called the False-Positive Sensitive Recall (FPSRC). An example call is shown below.
+
+```
+python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001
+```
+
+In the above example, we are calcuating the FPSRC on both the validation and test set at the 1%, 0.1% and 0.01% FPR levels.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the `LICENSE.md` file for details
