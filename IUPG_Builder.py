@@ -732,7 +732,10 @@ class IUPG_Builder(object):
         return last_input, last_dim
 
     def U_project(self, inp, dim):
-        """"""
+        """
+        Implements the final fully-connected layer which maps the input to the
+        output vector space, U.
+        """
         # Define a reference to the feat vec of last FC layer before projection
         # onto U vector space.
         self.last_fc_z = tf.reshape(inp, [-1, dim], name="last_fc_z")

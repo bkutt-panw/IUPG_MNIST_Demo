@@ -2,6 +2,10 @@
 
 A simple demo implementation of the Innocent Until Proven Guilty (IUPG) learning framework to train an MNIST classifier with or without noise.
 
+This demo is built to train and test an IUPG network with <em>one</em> designated prototype per target class. In this case, each digit 0-9 is defined as a target class. One off-target class (class label 0) is also supported. Two different sources of noise can be tested with this demo: Gaussian noise and random strokes. K-Means++ clustering on the training set can be used to discover useful prototype intializations for each class. If clustering is not used, the prototypes will be initialized randomly.
+
+This demo does not currently implement the strategy of using a basis set to define prototypes. Defining multiple prototypes per target class will require significant modifications to this code.
+
 ## Prerequisites
 
 Use Python 3. This project has been tested on a Linux CPU-only environment and with CUDA-capable GPUs.
@@ -85,7 +89,6 @@ In the above example, we are calculating the non-noise error on both the validat
 ```
 python3 analyze_scores.py --pred_fps predictions/val_predictions predictions/test_predictions --labels "Validation_Performance,Test_Performance" --ref_fprs 0.01,0.001,0.0001 --cust_thresh [THRESHOLD]
 ```
-
 
 ## License
 
