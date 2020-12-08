@@ -482,7 +482,6 @@ class IUPG_Builder(object):
 
         # Calculate the loss
         with tf.name_scope("avg_loss"):
-            # Compute sigmoid cross entropy Loss
             losses = self.iupg_loss(self.sig_D,
                                     self.y_shaved,
                                     self.omega_vecs,
