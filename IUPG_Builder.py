@@ -1148,14 +1148,14 @@ class IUPG_Builder(object):
                 self.start = timer()
                 if eval_on_train_data:
                     print("Doing initial train set evaluation...")
-                    result = test_step(
+                    test_step(
                         0,
                         iupg_input.get_train_batch_iter(EVAL_BATCH_SIZE),
                         self.train_summary_file,
                         Bar("Progress... ", max=iupg_input.n_train),
                     )
                 print("Doing initial val set evaluation...")
-                result = test_step(
+                test_step(
                     0,
                     iupg_input.get_val_batch_iter(EVAL_BATCH_SIZE),
                     self.val_summary_file,
