@@ -1139,9 +1139,6 @@ class IUPG_Builder(object):
                 step_num_at_best = 0
                 best_cm = None
                 best_pps = None
-                # Keep historical record of per proto stats for plotting
-                train_hist_pps = []
-                val_hist_pps = []
                 # The number of val set evaluations since we've beaten our
                 # best val set loss. If this gets large, we can be confident
                 # that we wont beat it in this training session.
@@ -1157,7 +1154,6 @@ class IUPG_Builder(object):
                         self.train_summary_file,
                         Bar("Progress... ", max=iupg_input.n_train),
                     )
-                    train_hist_pps.append(result["pps"])
                 print("Doing initial val set evaluation...")
                 result = test_step(
                     0,
@@ -1165,7 +1161,6 @@ class IUPG_Builder(object):
                     self.val_summary_file,
                     Bar("Progress... ", max=iupg_input.n_val),
                 )
-                val_hist_pps.append(result["pps"])
 
                 if plot_every > 0:
                     # Plot random subset at initialization
@@ -1209,7 +1204,6 @@ class IUPG_Builder(object):
                                 self.train_summary_file,
                                 Bar("Progress... ", max=iupg_input.n_train),
                             )
-                            train_hist_pps.append(result["pps"])
                         print("\nDoing val set evaluation...")
                         val_batch_iter = iupg_input.get_val_batch_iter(
                             EVAL_BATCH_SIZE)
@@ -1219,7 +1213,6 @@ class IUPG_Builder(object):
                             self.val_summary_file,
                             Bar("Progress... ", max=iupg_input.n_val),
                         )
-                        val_hist_pps.append(result["pps"])
                         # Check to see if a new best model has been found
                         if min_val_loss > result["avg_loss"]:
                             print((("New minimum loss found! Loss improved "
