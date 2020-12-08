@@ -605,28 +605,18 @@ class IUPG_Builder(object):
                     Z = tf.nn.relu(conv_add_b2,
                                    name="deep_Z-%s" % unique_layer_id)
 
+                Z_shape = Z.get_shape().as_list()
                 if self.global_max_pool:
                     # Global max pooling over the activation maps
-                    Z_pooled = tf.math.reduce_max(
+                    Z_final = tf.math.reduce_max(
                         Z,
                         axis=(1, 2),
                         keepdims=True,
                         name="Z_global_max-%s" % unique_layer_id,
                     )
-                    all_pooled_outputs.append(Z_pooled)
-                    conv_layer_id += 1
                 else:
                     unique_layer_id = "%d.%s" % (conv_layer_id, "FCC")
-                    # Implement final pooling layer
-                    Z_pooled = tf.nn.max_pool2d(
-                        input=Z,
-                        ksize=[1, 2, 2, 1],
-                        strides=[1, 2, 2, 1],
-                        padding="SAME",
-                        name="Z_pooled-%s" % unique_layer_id,
-                    )
                     # Implement the final fully connected convolutional layer
-                    Z_shape = Z_pooled.get_shape().as_list()
                     final_filter_shape = [
                         Z_shape[1],
                         Z_shape[2],
@@ -647,7 +637,7 @@ class IUPG_Builder(object):
                     )
                     # Do convolution
                     conv3 = tf.nn.conv2d(
-                        Z_pooled,
+                        Z,
                         W_c3,
                         strides=[1, 1, 1, 1],
                         padding="VALID",
@@ -661,9 +651,9 @@ class IUPG_Builder(object):
                     # Apply activation function on deep input
                     Z_final = tf.nn.relu(conv_add_b3,
                                          name="final_Z-%s" % unique_layer_id)
-                    Z_final = tf.reshape(Z_final, [-1, 1, 1, Z_shape[3]])
-                    all_pooled_outputs.append(Z_final)
-                    conv_layer_id += 1
+                Z_final = tf.reshape(Z_final, [-1, 1, 1, Z_shape[3]])
+                all_pooled_outputs.append(Z_final)
+                conv_layer_id += 1
 
         # Combine all the pooled activation maps into tensor
         self.n_filts_total = 0
