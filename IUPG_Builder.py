@@ -394,8 +394,7 @@ class IUPG_Builder(object):
         self.X_batch = tf.compat.v1.placeholder(
             tf.float32,
             # [Batch size, Image Height, Image Width]
-            [None, utils.im_height(),
-             utils.im_width()],
+            [None, utils.im_height(), utils.im_width()],
             name="X_batch",
         )
         self.batch_size_ref = tf.shape(self.X_batch)[0]
@@ -430,7 +429,7 @@ class IUPG_Builder(object):
         self.given_U_protos = tf.compat.v1.placeholder_with_default(
             tf.zeros([utils.n_protos(), self.out_dim], dtype=tf.float32),
             shape=[utils.n_protos(), self.out_dim],
-            name="given_U_protos",
+            name="given_U_protos"
         )
         # Learnable vector of weights for distance metric
         self.alpha = tf.Variable(tf.zeros([1, self.out_dim, 1]), name="alpha")
@@ -463,7 +462,7 @@ class IUPG_Builder(object):
             # Send prototypes through the network, if needed
             proto_U_vec = tf.cond(
                 self.run_protos,
-                lambda: self.network(self.protos_ex, reuse=True),
+                lambda: self.network(self.protos_ex),
                 lambda: self.given_U_protos,
             )
             self.proto_U_vec = tf.identity(proto_U_vec, name="proto_U_vec")
@@ -493,7 +492,7 @@ class IUPG_Builder(object):
             self.avg_loss = tf.reduce_mean(self.losses, name="avg_loss")
             self.avg_loss_l2 = self.avg_loss + (self.l2_lambda * l2_loss)
 
-    def network(self, inp, reuse=False):
+    def network(self, inp):
         """
         Defines the main network encoder.
         """
@@ -767,7 +766,7 @@ class IUPG_Builder(object):
         Initialize the prototypes with the passed in initializations.
         """
         # Define the  prototypes
-        protos = tf.Variable(
+        return tf.Variable(
             initial_value=self.proto_inits + tf.random.truncated_normal(
                 [utils.n_protos(),
                  utils.im_height(),
@@ -775,18 +774,15 @@ class IUPG_Builder(object):
                 mean=0.0,
                 stddev=rnd_noise_stddev,
             ),
-            name="protos",
             dtype=tf.float32,
-            trainable=True,
-        )
-        return protos
+            trainable=True)
 
     def rnd_proto_init(self):
         """
         Initialize the prototypes randomly.
         """
         # Define the prototypes (random init)
-        protos = tf.Variable(
+        return tf.Variable(
             initial_value=tf.random_uniform(
                 [utils.n_protos(),
                  utils.im_height(),
@@ -795,11 +791,8 @@ class IUPG_Builder(object):
                 maxval=self.rnd_proto_init_mag,
                 seed=self.random_seed * 2,
             ),
-            name="protos",
             dtype=tf.float32,
-            trainable=True,
-        )
-        return protos
+            trainable=True)
 
     def _define_output_dirs(self):
         """
