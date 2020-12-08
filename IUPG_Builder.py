@@ -672,52 +672,53 @@ class IUPG_Builder(object):
         """
         Implements the fully connected layers.
         """
-        layers = {}
-        layer_compute = {}
-        all_dims = [self.n_filts_total] + self.fc_p["num_filts"]
-        for i in range(1, len(all_dims)):
-            new_layer = {}
-            # Define this FC layer's weights and biases
-            new_layer["weights"] = tf.compat.v1.get_variable(
-                "W_fc_%s" % all_dims[i],
-                initializer=lambda: tf.random.truncated_normal(
-                    [all_dims[i - 1], all_dims[i]], stddev=2e-1),
-                trainable=True,
-            )
-            self.W_for_l2.append(new_layer["weights"])
-            new_layer["biases"] = tf.compat.v1.get_variable(
-                "b_fc_%s" % all_dims[i],
-                initializer=lambda: tf.random.truncated_normal(
-                    [all_dims[i]], mean=0.5, stddev=1e-2),
-                trainable=True,
-            )
-            layers[i - 1] = new_layer
+        with tf.device(self.next_device()), tf.name_scope('fc_layers'):
+            layers = {}
+            layer_compute = {}
+            all_dims = [self.n_filts_total] + self.fc_p["num_filts"]
+            for i in range(1, len(all_dims)):
+                new_layer = {}
+                # Define this FC layer's weights and biases
+                new_layer["weights"] = tf.compat.v1.get_variable(
+                    "W_fc_%s" % all_dims[i],
+                    initializer=lambda: tf.random.truncated_normal(
+                        [all_dims[i - 1], all_dims[i]], stddev=2e-1),
+                    trainable=True,
+                )
+                self.W_for_l2.append(new_layer["weights"])
+                new_layer["biases"] = tf.compat.v1.get_variable(
+                    "b_fc_%s" % all_dims[i],
+                    initializer=lambda: tf.random.truncated_normal(
+                        [all_dims[i]], mean=0.5, stddev=1e-2),
+                    trainable=True,
+                )
+                layers[i - 1] = new_layer
 
-            # Multiply the inputs by weights
-            xw_plus_b = tf.compat.v1.nn.xw_plus_b(
-                inp if i == 1 else layer_compute[i - 2],
-                layers[i - 1]["weights"],
-                layers[i - 1]["biases"],
-                name="xw_plus_b_%s" % all_dims[i],
-            )
-            # Apply activation
-            fc_z = tf.math.sigmoid(xw_plus_b, name="fc_z_%s" % all_dims[i])
-            # Perform dropout
-            fc_z_dropped = tf.nn.dropout(
-                fc_z,
-                rate=1 - self.drop_keep_prob,
-                name="fc_z_dropped_%s" % all_dims[i],
-            )
-            layer_compute[i - 1] = tf.reshape(fc_z_dropped, [-1, all_dims[i]])
-
-        # Get variables for last FC layer
-        if len(all_dims) == 1:
-            last_input = inp
-            last_dim = self.n_filts_total
-        else:
-            last_input = layer_compute[len(layer_compute) - 1]
-            last_dim = all_dims[-1]
-        return last_input, last_dim
+                # Multiply the inputs by weights
+                xw_plus_b = tf.compat.v1.nn.xw_plus_b(
+                    inp if i == 1 else layer_compute[i - 2],
+                    layers[i - 1]["weights"],
+                    layers[i - 1]["biases"],
+                    name="xw_plus_b_%s" % all_dims[i],
+                )
+                # Apply activation
+                fc_z = tf.math.sigmoid(xw_plus_b, name="fc_z_%s" % all_dims[i])
+                # Perform dropout
+                fc_z_dropped = tf.nn.dropout(
+                    fc_z,
+                    rate=1 - self.drop_keep_prob,
+                    name="fc_z_dropped_%s" % all_dims[i],
+                )
+                layer_compute[i - 1] = tf.reshape(fc_z_dropped,
+                                                  [-1, all_dims[i]])
+            # Get variables for last FC layer
+            if len(all_dims) == 1:
+                last_input = inp
+                last_dim = self.n_filts_total
+            else:
+                last_input = layer_compute[len(layer_compute) - 1]
+                last_dim = all_dims[-1]
+            return last_input, last_dim
 
     def U_project(self, inp, dim):
         """
