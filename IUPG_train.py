@@ -46,22 +46,22 @@ def process_config(config):
     args["optimizer"] = config.get("Critical", "optimizer")
     args["gamma"] = config.getfloat("Critical", "gamma")
 
-    args["cnn_params"] = {}
+    args["conv_params"] = {}
     # Grab Char CNN params
-    c = args["cnn_params"]
-    c["filt_sizes"] = config.get("CNN_Params", "filt_sizes")
+    c = args["conv_params"]
+    c["filt_sizes"] = config.get("Conv_Params", "filt_sizes")
     c["filt_sizes"] = [int(i.strip()) for i in c["filt_sizes"].split(",")]
-    c["num_filts"] = config.get("CNN_Params", "num_filts")
+    c["num_filts"] = config.get("Conv_Params", "num_filts")
     c["num_filts"] = [int(i.strip()) for i in c["num_filts"].split(",")]
-    c["deep_filt_sizes"] = config.get("CNN_Params", "deep_filt_sizes")
+    c["deep_filt_sizes"] = config.get("Conv_Params", "deep_filt_sizes")
     c["deep_filt_sizes"] = [
         int(i.strip()) for i in c["deep_filt_sizes"].split(",")
     ]
-    c["deep_num_filts"] = config.get("CNN_Params", "deep_num_filts")
+    c["deep_num_filts"] = config.get("Conv_Params", "deep_num_filts")
     c["deep_num_filts"] = [
         int(n.strip()) for n in c["deep_num_filts"].split(",")
     ]
-    c["deep_pool"] = config.get("CNN_Params", "deep_pool")
+    c["deep_pool"] = config.get("Conv_Params", "deep_pool")
     c["deep_pool"] = [
         i.strip().startswith("T") for i in c["deep_pool"].split(",")
     ]
@@ -134,7 +134,7 @@ def train_iupg(args, proto_inits=None):
     iupg = IUPG_Builder(
         args["model_name"],
         os.path.dirname(args["save_dir"]),
-        args["cnn_params"],
+        args["conv_params"],
         args["fc_params"],
         args["out_dim"],
         args["dist_metric"],

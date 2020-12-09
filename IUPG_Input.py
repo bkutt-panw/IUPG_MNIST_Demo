@@ -156,6 +156,7 @@ class IUPG_Input:
         """
         Returns a batch of training data of the given size and updates index.
         """
+        assert self.using_val
         batch = {}
         if self.i + batch_size >= self.n_train:
             # Grab the rest of the data that hasn't been seen yet
