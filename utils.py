@@ -139,7 +139,7 @@ def record_scores_and_preds(dig_ids,
 
 def get_opt_threshold(y_true, min_D, win_protos):
     """
-    Calculate the decision  threshold (to call noise samples) which maximizes
+    Calculate the decision threshold (to call noise samples) which maximizes
     accuracy.
     """
     min_D_inds = np.argsort(min_D)
@@ -147,9 +147,8 @@ def get_opt_threshold(y_true, min_D, win_protos):
     sorted_min_D = min_D[min_D_inds]
     sorted_win_protos = win_protos[min_D_inds]
     n_samps = len(sorted_y_true)
-    candidate_thresholds = np.array([sorted_min_D[0] / 2.0] + (
-        (sorted_min_D[1:] + sorted_min_D[:-1]) / 2.0).tolist() +
-                                    [(1.0 + sorted_min_D[-1]) / 2.0] + [2.0])
+    candidate_thresholds = [sorted_min_D[0] / 2.0] + ((sorted_min_D[1:] + sorted_min_D[:-1]) / 2.0).tolist() + [(1.0 + sorted_min_D[-1]) / 2.0] + [2.0]
+    candidate_thresholds = np.array(list(set(candidate_thresholds)))
     n_threshs = len(candidate_thresholds)
     min_D_tiled = np.tile(sorted_min_D, (n_threshs, 1))
     win_protos_tiled = np.tile(sorted_win_protos, (n_threshs, 1))
